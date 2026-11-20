@@ -1,18 +1,6 @@
 (() => {
   "use strict";
 
-  /* =====================================================================
-     EDIT YOUR CONTENT HERE
-     ===================================================================== */
-
-  // Logo helpers. Each software lists several sources: if the first fails to
-  // load, the next one is tried, and finally a clean monogram is shown.
-  // To use your own file, put it first: "images/logos/solidworks.svg".
-  const si = (slug, color) => `https://cdn.simpleicons.org/${slug}${color ? "/" + color : ""}`;
-  const dv = (name, variant = "original") =>
-    `https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/${name}/${name}-${variant}.svg`;
-  const L = (name, ...src) => ({ name, src });
-
   const CONFIG = {
   "email": "tbailimohammedbader@gmail.com",
   "stack": [
@@ -537,7 +525,7 @@
         }
       ],
       "icon": "trophy",
-      "where": "NPHO · National level",
+      "where": "NPhO · National level",
       "text": "Took part in national mathematics and physics olympiads."
     },
     {
@@ -590,8 +578,9 @@
   ],
   "profile": {
     "headline": "Engineering student at EMINES – UM6P",
+    "tagline": "I build software with Python and C#, and I enjoy turning complex ideas into practical solutions.",
     "intro": "I am Mohammed Bader Tbaïli, an engineering student at EMINES, the School of Industrial Management at Mohammed VI Polytechnic University. My academic journey brings together mathematics, physics, experimental work and engineering projects, with programming as a tool for modelling, measurement and problem-solving.",
-    "about": "My interests lie in understanding physical systems and connecting theory with practical engineering. I study mathematical reasoning, mechanics, electricity and experimental methods, and apply these foundations through laboratory work and collaborative projects. Alongside my studies, I develop tools in Python and C# to organise measurements, analyse results and communicate technical ideas clearly."
+    "about": "My interests lie in understanding physical systems and connecting theory with practical engineering. I study mathematical reasoning, mechanics, electricity and experimental methods, and apply these foundations through laboratory work and collaborative projects. Alongside my studies, I develop tools in Python and C# to organise measurements, analyse results and communicate technical ideas clearly. I am also strengthening my fundamentals in C."
   }
 };
   /* ===================================================================== */
@@ -607,9 +596,14 @@
     const element = $(selector);
     if (element) element.textContent = text;
   };
-  setText(".hero .kicker", CONFIG.profile.headline);
-  setText(".hero .lede", CONFIG.profile.intro);
-  setText(".about p", CONFIG.profile.about);
+  const kicker = $(".hero .kicker");
+  if (kicker) { // keep the icon, replace only the text
+    Array.from(kicker.childNodes).filter((x) => x.nodeType === 3).forEach((x) => x.remove());
+    kicker.append(document.createTextNode(CONFIG.profile.headline));
+  }
+  setText(".hero .lede", CONFIG.profile.tagline);
+  const aboutP = $(".about > p");
+  if (aboutP) aboutP.outerHTML = `<div class="intro"><p>${esc(CONFIG.profile.intro)}</p><p>${esc(CONFIG.profile.about)}</p></div>`;
   document.title = "Mohammed Bader Tbaïli | Engineering student · EMINES–UM6P";
   const description = document.querySelector('meta[name="description"]');
   if (description) description.content = CONFIG.profile.intro;
@@ -631,7 +625,7 @@
     <article class="proj reveal" style="--h:${p.hue};--d:${i * 0.08}s">
       <button class="row" type="button" aria-expanded="false" aria-controls="d${i}">
         <span class="yr mono">${p.year}</span>
-        <span class="thumb"><img src="${p.cover}" alt="${p.title} cover" loading="lazy"><span class="ph mono">${ico("folder")}Add cover</span></span>
+        <span class="thumb"><img src="${p.cover}" alt="${p.title} cover" loading="lazy"><span class="ph" aria-hidden="true">${ico(p.icon)}</span></span>
         <span class="body">
           <strong>${ico(p.icon)}${p.title}</strong>
           <span class="desc">${p.desc}</span>
@@ -641,12 +635,12 @@
       </button>
       <div class="detail" id="d${i}" inert><div class="inner"><div class="in2">
         <p class="more">${p.more}</p>
-        <ul class="pts">${p.points.map((t) => `<li>${t}</li>`).join("")}</ul>
+        <ul class="pts">${p.points.map((t, k) => `<li style="--k:${k}">${t}</li>`).join("")}</ul>
         ${p.software.length ? `<p class="swl mono"><span>Software</span>${p.software.join(" · ")}</p>` : ""}
         <div class="gallery">${p.images.map((im) => `
           <figure class="shot">
             <img src="${im.src}" alt="${im.alt}" loading="lazy">
-            <span class="ph mono">${ico("folder")}Add picture<code>${im.src}</code></span>
+            
             <figcaption class="mono">${im.cap}</figcaption>
           </figure>`).join("")}</div>
         ${p.links.length ? `<p class="plinks">${p.links.map((l) => `<a class="u" href="${l.url}" target="_blank" rel="noopener">${l.label} ↗</a>`).join("")}</p>` : ""}
@@ -690,7 +684,7 @@
     <div class="cat">
       <h4>${esc(cat.title)}</h4>
       <ul class="logos">${cat.items.map((it) => `
-        <li class="logo" style="--h:${hue(n++)}" title="${esc(it.name)}">
+        <li class="logo" style="--h:${hue(n)};--k:${n++}" title="${esc(it.name)}">
           <span class="mark">
             <img src="${esc(it.src[0])}" data-srcs='${esc(JSON.stringify(it.src))}' data-i="0" data-name="${esc(it.name)}" alt="${esc(it.name)} logo" loading="lazy" decoding="async">
           </span>
@@ -718,14 +712,14 @@
       <div class="phead" ${p.more ? `role="button" tabindex="0" aria-expanded="false" aria-controls="s${i}"` : ""}>
         <span class="when">${p.when}</span>
         <div><h3>${ico(p.icon)}${p.role}</h3><p class="where">${p.where}</p><p>${p.text}</p></div>
-        ${p.img ? `<span class="thumb pthumb"><img src="${p.img}" alt="${p.role}" loading="lazy"><span class="ph mono">${ico("folder")}Add picture</span></span>` : "<span></span>"}
+        ${p.img ? `<span class="thumb pthumb"><img src="${p.img}" alt="${p.role}" loading="lazy"><span class="ph" aria-hidden="true">${ico(p.icon)}</span></span>` : "<span></span>"}
         ${p.more ? `<span class="arrow" aria-hidden="true">+</span>` : "<span></span>"}
       </div>
       ${p.more ? `<div class="detail" id="s${i}" inert><div class="inner"><div class="in2">
         <p class="more">${p.more}</p>
-        <ul class="pts">${p.points.map((t) => `<li>${t}</li>`).join("")}</ul>
+        <ul class="pts">${p.points.map((t, k) => `<li style="--k:${k}">${t}</li>`).join("")}</ul>
         <div class="gallery">${p.images.map((im) => `
-          <figure class="shot"><img src="${im.src}" alt="${im.alt}" loading="lazy"><span class="ph mono">${ico("folder")}Add picture<code>${im.src}</code></span><figcaption class="mono">${im.cap}</figcaption></figure>`).join("")}</div>
+          <figure class="shot"><img src="${im.src}" alt="${im.alt}" loading="lazy"><figcaption class="mono">${im.cap}</figcaption></figure>`).join("")}</div>
       </div></div></div>` : ""}
     </li>`).join("");
 
@@ -751,6 +745,13 @@
     const im = $("img", f); lbImg.src = im.src; lbImg.alt = im.alt; lb.hidden = false;
   }));
 
+  // Probe every picture up front: missing ones are hidden instead of showing a placeholder.
+  $$(".shot img, .thumb img").forEach((img) => {
+    const t = new Image();
+    t.onerror = () => img.parentElement.classList.add("empty");
+    t.src = img.getAttribute("src");
+  });
+
   /* ---------- Email ---------- */
   const mail = $("#mail");
   $("#mailText").textContent = CONFIG.email;
@@ -774,7 +775,7 @@
     button.dataset.view = "currently-working";
     button.setAttribute("aria-expanded", "false");
     button.setAttribute("aria-controls", "currently-working");
-    button.innerHTML = `${ico("layers")}Currently working on<span aria-hidden="true">+</span>`;
+    button.innerHTML = `${ico("layers")}Currently working on <span aria-hidden="true">↓</span>`;
     choices.append(button);
 
     const panel = document.createElement("section");
@@ -808,50 +809,6 @@
     referencePanel.after(panel);
   }
 
-  /* Small hover feedback, alongside the existing pointer-follow effects. */
-  const buttonMotion = document.createElement("style");
-  buttonMotion.id = "button-hover-motion";
-  buttonMotion.textContent = `
-    @media (hover: hover) and (pointer: fine) {
-      .choices .choice:hover {
-        background: #b7a4ff;
-        border-color: #b7a4ff;
-        color: #141019;
-      }
-      .choices .choice:hover .i,
-      .choices .choice:hover span { color: inherit; }
-    }
-    .pts li {
-      transition: transform .22s ease, background-color .22s ease,
-        border-color .22s ease, box-shadow .22s ease;
-    }
-    @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-      .pts li:hover {
-        transform: translateY(-3px);
-        background-color: color-mix(in srgb, var(--c, #a394ff) 10%, transparent);
-        border-color: var(--c, #a394ff);
-        box-shadow: 0 5px 18px -7px var(--c, #a394ff);
-      }
-      button:not(:disabled):hover, a.choice:hover, [role="button"]:hover {
-        animation: portfolio-button-hover .32s ease-out both;
-      }
-      button:not(:disabled):active, a.choice:active, [role="button"]:active {
-        scale: .98;
-        animation: none;
-      }
-      @keyframes portfolio-button-hover {
-        0% { scale: 1; }
-        65% { scale: 1.025; }
-        100% { scale: 1.015; }
-      }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      button, a.choice, [role="button"] { animation: none !important; }
-      .pts li { transition: none; }
-    }
-  `;
-  document.head.append(buttonMotion);
-
   /* Show only the chosen content. Clicking again closes it. */
   const panels = $$("[data-panel]");
   const controls = $$("[data-view]");
@@ -862,6 +819,11 @@
     controls.forEach((button) => {
       button.setAttribute("aria-expanded", String(button.dataset.view === view));
     });
+    const target = view && panels.find((p) => p.dataset.panel === view);
+    if (target && target.getBoundingClientRect().top > innerHeight * 0.6) {
+      const calmNow = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      requestAnimationFrame(() => target.scrollIntoView({ behavior: calmNow ? "auto" : "smooth", block: "start" }));
+    }
   }
   controls.forEach((button) => button.addEventListener("click", () => {
     const view = button.dataset.view;
