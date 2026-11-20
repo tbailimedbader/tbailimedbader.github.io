@@ -328,3 +328,26 @@ a, button, [role="button"], .shot:not(.empty), .lb, .lb img {
 @keyframes border-spin { to { --a: 360deg; } }
 @keyframes color-flow { to { background-position: 300% 0; } }
 @media (prefers-reduced-motion: reduce) { .choice:hover::before, .choice:hover::after { animation: none; } .choice:hover { transform: none; } }
+
+.pts li {
+  --c: hsl(var(--h, 260) var(--sat) var(--hl));
+  background-color: color-mix(in srgb, var(--c) 8%, transparent);
+  border-color: color-mix(in srgb, var(--c) 30%, transparent);
+}
+.pts li::before { box-shadow: 0 0 8px color-mix(in srgb, var(--c) 70%, transparent); }
+#currently-working .pts li:nth-child(1) { --h: 215; }
+#currently-working .pts li:nth-child(2) { --h: 285; }
+#currently-working .pts li:nth-child(3) { --h: 340; }
+
+.choices .choice[aria-expanded="true"],
+.choices .choice[aria-expanded="true"]:hover {
+  background: #b7a4ff;
+  border-color: #b7a4ff;
+  color: #141019;
+  font-weight: 600;
+}
+.choice[aria-expanded="true"]::before { opacity: 1; animation: border-spin 2.6s linear infinite; }
+.choice[aria-expanded="true"]::after { opacity: .55; transform: scale(1); animation: color-flow 5s linear infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .choice[aria-expanded="true"]::before, .choice[aria-expanded="true"]::after { animation: none; }
+}
